@@ -22,6 +22,13 @@ resource "aws_security_group" "my_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+ ingress {
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -41,8 +48,8 @@ resource "aws_instance" "my_server" {
   user_data = file("user_data.sh")
 
   tags = {
-    Name = "Yusif-DevOps-Proxy"
-  }
+    Name = "Yusif-Super-Server"
+ }
 }
 
 # 4. Выводим IP адрес после запуска, чтобы не искать его
