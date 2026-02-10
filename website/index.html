@@ -19,12 +19,10 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: ./website
-          file: ./website/Dockerfile
-          push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/my-web-site:latest
+        run: |
+          # Эта команда сама найдет Dockerfile в подпапках и соберет его
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/my-web-site:latest -f $(find . -name Dockerfile | head -n 1) .
+          docker push ${{ secrets.DOCKER_USERNAME }}/my-web-site:latest
 
       - name: Deploy to AWS via SSH
         uses: appleboy/ssh-action@master
