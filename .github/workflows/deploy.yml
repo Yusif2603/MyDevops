@@ -1,21 +1,41 @@
 name: Deploy Website
+
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Copy files to AWS
-        uses: appleboy/scp-action@master
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
         with:
-          host: ${{ secrets.HOST }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./website
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/my-web-site:latest
+
+      - name: Deploy to AWS via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
           username: ubuntu
-          key: ${{ secrets.SSH_KEY }}
-          source: "website/index.html"
-          target: "/home/ubuntu/my-website"
-          strip_components: 1
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/my-web-site:latest
+            sudo docker stop my-web-site || true
+            sudo docker rm my-web-site || true
+            sudo docker run -d --name my-web-site \
+              -p 80:80 -p 443:443 \
+              -v /etc/letsencrypt:/etc/letsencrypt \
+              ${{ secrets.DOCKER_USERNAME }}/my-web-site:latest
