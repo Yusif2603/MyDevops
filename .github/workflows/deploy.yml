@@ -21,8 +21,9 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
-          context: .
-          file: ./website/Dockerfile
+          # Указываем точный путь к папке, где лежит index.html и Dockerfile
+          context: ./terraform-labs/website/ 
+          file: ./terraform-labs/website/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/my-web-site:latest
 
