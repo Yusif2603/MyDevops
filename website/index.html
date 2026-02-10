@@ -19,17 +19,13 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and push Docker image
-        run: |
-          # Ищем Dockerfile по всему проекту
-          DOCKERFILE_PATH=$(find . -name Dockerfile | head -n 1)
-          # Определяем папку, где он лежит
-          CONTEXT_PATH=$(dirname $DOCKERFILE_PATH)
-          
-          echo "Found Dockerfile at: $DOCKERFILE_PATH"
-          echo "Using context: $CONTEXT_PATH"
-          
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/my-web-site:latest -f $DOCKERFILE_PATH $CONTEXT_PATH
-          docker push ${{ secrets.DOCKER_USERNAME }}/my-web-site:latest
+        uses: docker/build-push-action@v4
+        with:
+          # Указываем точный путь к папке, где лежит index.html и Dockerfile
+          context: ./terraform-labs/website/ 
+          file: ./terraform-labs/website/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/my-web-site:latest
 
       - name: Deploy to AWS via SSH
         uses: appleboy/ssh-action@master
