@@ -20,8 +20,15 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          # Эта команда сама найдет Dockerfile в подпапках и соберет его
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/my-web-site:latest -f $(find . -name Dockerfile | head -n 1) .
+          # Ищем Dockerfile по всему проекту
+          DOCKERFILE_PATH=$(find . -name Dockerfile | head -n 1)
+          # Определяем папку, где он лежит
+          CONTEXT_PATH=$(dirname $DOCKERFILE_PATH)
+          
+          echo "Found Dockerfile at: $DOCKERFILE_PATH"
+          echo "Using context: $CONTEXT_PATH"
+          
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/my-web-site:latest -f $DOCKERFILE_PATH $CONTEXT_PATH
           docker push ${{ secrets.DOCKER_USERNAME }}/my-web-site:latest
 
       - name: Deploy to AWS via SSH
