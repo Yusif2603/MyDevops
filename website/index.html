@@ -9,44 +9,25 @@
             background: #ffafbd;
             background: linear-gradient(to right, #ffc3a0, #ffafbd);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            overflow: hidden;
-            color: #d63384;
+            display: flex; align-items: center; justify-content: center;
+            height: 100vh; margin: 0; overflow: hidden; color: #d63384;
         }
         .game-container {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-            position: relative;
-            z-index: 10;
+            background: rgba(255, 255, 255, 0.9); padding: 30px;
+            border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center; max-width: 400px; width: 90%; position: relative; z-index: 10;
         }
         h1 { margin-bottom: 20px; font-size: 24px; }
         .btn {
-            background: #ff4d6d;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 18px;
-            margin: 10px;
-            transition: transform 0.2s;
+            background: #ff4d6d; color: white; border: none;
+            padding: 12px 25px; border-radius: 25px; cursor: pointer;
+            font-size: 18px; margin: 10px; transition: transform 0.2s;
         }
         .btn:hover { transform: scale(1.1); background: #ff758f; }
         #no-btn { position: relative; }
         .hidden { display: none; }
         .heart {
-            position: absolute;
-            color: #ff4d6d;
-            font-size: 20px;
+            position: absolute; color: #ff4d6d; font-size: 20px;
             animation: float 3s linear infinite;
         }
         @keyframes float {
@@ -84,6 +65,20 @@
     </div>
 
     <script>
+        // Функция, которая отправляет тебе весточку в Телеграм
+        function sendTelegramMessage() {
+            // ВНИМАНИЕ: Замени данные ниже на свои!
+            const token = '8574073882:AAF7QTdCEJwxvfnlC-nwFFHETbC9OW-VhaE'; 
+            const chatId = '845092985';
+            const message = 'Юсиф! Аиша только что дошла до конца игры! ❤️';
+
+            const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
+
+            fetch(url)
+            .then(response => console.log('ТГ уведомление отправлено!'))
+            .catch(error => console.error('Ошибка ТГ:', error));
+        }
+
         function moveNo() {
             const btn = document.getElementById('no-btn');
             const x = Math.random() * (window.innerWidth - btn.offsetWidth);
@@ -100,10 +95,16 @@
             document.getElementById('step' + step).classList.remove('hidden');
         }
 
+        
         function surprise() {
             document.getElementById('step3').classList.add('hidden');
             document.getElementById('final').classList.remove('hidden');
+            
+        
             setInterval(createHeart, 300);
+            
+           
+            sendTelegramMessage();
         }
 
         function createHeart() {
@@ -114,17 +115,7 @@
             heart.style.animationDuration = Math.random() * 2 + 3 + 's';
             document.body.appendChild(heart);
             setTimeout(() => heart.remove(), 4000);
-        }function sendTelegramMessage() {
-    const token = '8574073882:AAF7QTdCEJwxvfnlC-nwFFHETbC9OW-VhaE';
-    const chatId = '845092985';
-    const message = 'Юсиф! Аиша только что прошла игру и увидела твое признание! ❤️';
-
-    const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
-
-    fetch(url)
-    .then(response => console.log('Уведомление отправлено!'))
-    .catch(error => console.error('Ошибка:', error));
-}
+        }
     </script>
 </body>
 </html>
