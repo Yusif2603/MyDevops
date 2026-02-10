@@ -1,105 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-    <title>Yusif's Project</title>
-    <title>Для моей прекрасной Аиши</title>
-<style>
-        body { 
-            background-color: #121212; 
-            color: #ffffff; 
-        body {
-            background: radial-gradient(circle, #1a1a1a, #000);
-            color: white;
-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-display: flex;
-justify-content: center;
-align-items: center;
-height: 100vh;
-margin: 0;
-            overflow: hidden;
-            position: relative;
-}
-
-.container {
-text-align: center;
-            padding: 50px;
-            background-color: #1e1e1e;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 40px;
-border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            border: 2px solid #00ff88;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 0, 85, 0.3);
-            box-shadow: 0 0 30px rgba(255, 0, 85, 0.2);
-            z-index: 10;
-}
-        h1 { color: #00ff88; font-size: 3rem; margin-bottom: 10px; }
-        p { color: #888; font-size: 1.2rem; }
-        .status { 
-            display: inline-block;
-            margin-top: 20px;
-            padding: 10px 20px;
-            background: #00ff88;
-            color: #121212;
-            font-weight: bold;
-            border-radius: 50px;
-
-        h1 { color: #ff0055; font-size: 3rem; margin-bottom: 20px; text-shadow: 0 0 10px #ff0055; }
-        
-        .poem {
-            font-style: italic;
-            font-size: 1.4rem;
-            line-height: 1.6;
-            color: #ffcccc;
-        }
-
-        /* Анимация сердечек */
-        .heart {
-            position: absolute;
-            top: -10px;
-            color: #ff0055;
-            font-size: 20px;
-            user-select: none;
-            z-index: 1;
-            animation: fall linear forwards;
-        }
-
-        @keyframes fall {
-            to { transform: translateY(110vh) rotate(360deg); }
-}
-</style>
+    <meta charset="UTF-8">
+    <title>Для моей Аиши</title>
+    <style>
+        body { background-color: #ffe6e6; text-align: center; font-family: Arial, sans-serif; padding-top: 50px; }
+        h1 { color: #ff4d4d; }
+        .heart { color: #ff4d4d; font-size: 100px; }
+    </style>
 </head>
 <body>
-
-<div class="container">
-        <h1>YUSIF PRO</h1>
-        <p>Managed by Terraform & GitHub Actions</p>
-        <div class="status">SERVER ONLINE</div>
-        <h1>Для Аиши ❤️</h1>
-        <div class="poem">
-            Твои глаза, как две звезды в ночи,<br>
-            От них в моей душе всегда ключи.<br>
-            Любовь к тебе — мой главный в жизни путь,<br>
-            И с этой тропки мне уж не свернуть.
-        </div>
-</div>
-
-    <script>
-        function createHeart() {
-            const heart = document.createElement('div');
-            heart.classList.add('heart');
-            heart.innerHTML = '❤️';
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.animationDuration = Math.random() * 3 + 2 + 's';
-            heart.style.opacity = Math.random();
-            document.body.appendChild(heart);
-
-            setTimeout(() => { heart.remove(); }, 5000);
-        }
-        setInterval(createHeart, 300);
-    </script>
+    <div class="heart">❤️</div>
+    <h1>Аиша, я тебя очень сильно люблю!</h1>
+    <p>Этот сайт работает специально для тебя.</p>
 </body>
 </html>
