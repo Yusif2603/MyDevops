@@ -114,7 +114,17 @@
             heart.style.animationDuration = Math.random() * 2 + 3 + 's';
             document.body.appendChild(heart);
             setTimeout(() => heart.remove(), 4000);
-        }
+        }function sendTelegramMessage() {
+    const token = '8574073882:AAF7QTdCEJwxvfnlC-nwFFHETbC9OW-VhaE';
+    const chatId = '845092985';
+    const message = 'Юсиф! Аиша только что прошла игру и увидела твое признание! ❤️';
+
+    const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
+
+    fetch(url)
+    .then(response => console.log('Уведомление отправлено!'))
+    .catch(error => console.error('Ошибка:', error));
+}
     </script>
 </body>
 </html>
