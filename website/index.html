@@ -1,10 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <title>My Website</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Project</title>
+    <style>
+        body { background: linear-gradient(135deg, #1e3c72, #2a5298); color: white; height: 100vh; display: flex; align-items: center; justify-content: center; font-family: sans-serif; margin: 0; }
+        .card { text-align: center; background: rgba(255, 255, 255, 0.1); padding: 50px; border-radius: 20px; backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        h1 { font-size: 3rem; margin-bottom: 10px; }
+        p { font-size: 1.2rem; opacity: 0.8; }
+    </style>
 </head>
 <body>
-    <h1>Привет! Это мой сайт, который теперь обновляется сам!</h1>
-    <p>Юсиф, ты это сделал!</p>
+    <div class="card">
+        <h1>Юсиф, это работает! 🦾</h1>
+        <p>Сайт успешно деплоится через GitHub Actions.</p>
+    </div>
 </body>
 </html>
