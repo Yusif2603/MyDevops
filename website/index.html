@@ -3,18 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Project</title>
+    <title>Для Аиши ❤️</title>
     <style>
-        body { background: linear-gradient(135deg, #1e3c72, #2a5298); color: white; height: 100vh; display: flex; align-items: center; justify-content: center; font-family: sans-serif; margin: 0; }
-        .card { text-align: center; background: rgba(255, 255, 255, 0.1); padding: 50px; border-radius: 20px; backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        h1 { font-size: 3rem; margin-bottom: 10px; }
-        p { font-size: 1.2rem; opacity: 0.8; }
+        body {
+            background: #ffafbd;
+            background: linear-gradient(to right, #ffc3a0, #ffafbd);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            color: #d63384;
+        }
+        .game-container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            position: relative;
+            z-index: 10;
+        }
+        h1 { margin-bottom: 20px; font-size: 24px; }
+        .btn {
+            background: #ff4d6d;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 18px;
+            margin: 10px;
+            transition: transform 0.2s;
+        }
+        .btn:hover { transform: scale(1.1); background: #ff758f; }
+        #no-btn { position: relative; }
+        .hidden { display: none; }
+        .heart {
+            position: absolute;
+            color: #ff4d6d;
+            font-size: 20px;
+            animation: float 3s linear infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h1>Юсиф, это работает! 🦾</h1>
-        <p>Сайт успешно деплоится через GitHub Actions.</p>
+
+    <div class="game-container" id="game-box">
+        <div id="step1">
+            <h1>Аиша, ты меня любишь? ❤️</h1>
+            <button class="btn" onclick="nextStep(2)">Да!</button>
+            <button class="btn" id="no-btn" onmouseover="moveNo()">Нет</button>
+        </div>
+
+        <div id="step2" class="hidden">
+            <h1>А как сильно? 🌹</h1>
+            <button class="btn" onclick="nextStep(3)">До луны и обратно!</button>
+            <button class="btn" onclick="nextStep(3)">Больше всех на свете!</button>
+        </div>
+
+        <div id="step3" class="hidden">
+            <h1>Правильный ответ! 🏆</h1>
+            <p style="font-size: 20px;">Теперь посмотри на экран...</p>
+            <button class="btn" onclick="surprise()">Нажми сюда</button>
+        </div>
+
+        <div id="final" class="hidden">
+            <h1>Я ТЕБЯ ЛЮБЛЮ! ❤️</h1>
+            <p>Этот сайт был создан специально для тебя.</p>
+            <p style="font-size: 40px;">💍✨</p>
+        </div>
     </div>
+
+    <script>
+        function moveNo() {
+            const btn = document.getElementById('no-btn');
+            const x = Math.random() * (window.innerWidth - btn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - btn.offsetHeight);
+            btn.style.position = 'fixed';
+            btn.style.left = x + 'px';
+            btn.style.top = y + 'px';
+        }
+
+        function nextStep(step) {
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('step3').classList.add('hidden');
+            document.getElementById('step' + step).classList.remove('hidden');
+        }
+
+        function surprise() {
+            document.getElementById('step3').classList.add('hidden');
+            document.getElementById('final').classList.remove('hidden');
+            setInterval(createHeart, 300);
+        }
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 2 + 3 + 's';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 4000);
+        }
+    </script>
 </body>
 </html>
