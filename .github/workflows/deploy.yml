@@ -1,10 +1,7 @@
 name: Deploy Website
-
 on:
   push:
-    branches:
-      - main
-
+    branches: [ main ]
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -18,16 +15,16 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v4
-        with:
-          # Указываем точный путь к папке, где лежит index.html и Dockerfile
-          context: ./terraform-labs/website/ 
-          file: ./terraform-labs/website/Dockerfile
-          push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/my-web-site:latest
+      - name: Find and Build
+        run: |
+          # Этот скрипт сам найдет Dockerfile
+          FILE_PATH=$(find . -name Dockerfile | head -n 1)
+          CONTEXT_DIR=$(dirname $FILE_PATH)
+          echo "Found Dockerfile at $FILE_PATH"
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/my-web-site:latest -f $FILE_PATH $CONTEXT_DIR
+          docker push ${{ secrets.DOCKER_USERNAME }}/my-web-site:latest
 
-      - name: Deploy to AWS via SSH
+      - name: Deploy to AWS
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SERVER_IP }}
@@ -37,7 +34,4 @@ jobs:
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/my-web-site:latest
             sudo docker stop my-web-site || true
             sudo docker rm my-web-site || true
-            sudo docker run -d --name my-web-site \
-              -p 80:80 -p 443:443 \
-              -v /etc/letsencrypt:/etc/letsencrypt \
-              ${{ secrets.DOCKER_USERNAME }}/my-web-site:latest
+            sudo docker run -d --name my-web-site -p 80:80 -p 443:443 -v /etc/letsencrypt:/etc/letsencrypt ${{ secrets.DOCKER_USERNAME }}/my-web-site:latest
