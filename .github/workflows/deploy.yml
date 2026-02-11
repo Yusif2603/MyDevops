@@ -18,18 +18,17 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: ubuntu
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            # Переходим в папку проекта (создаем, если нет)
+         script: |
+            # 1. Создаем папку и заходим в нее
             mkdir -p ~/app
             cd ~/app
 
-            # Копируем всё содержимое репозитория на сервер
-            # (В реальных проектах используют git pull, но для начала сделаем так)
-            
-            # Удаляем старые контейнеры, если они были запущены не через compose
-            sudo docker stop my-web-site || true
-            sudo docker rm my-web-site || true
+            # 2. Очищаем старое (чтобы не было путаницы)
+            sudo rm -rf *
 
-            # Запускаем магию Docker Compose
-            # -d значит "в фоне", --build значит "пересобрать образы"
+            # 3. Клонируем свежий код прямо из твоего репозитория
+            # Вставь тут свою ссылку на репозиторий вместо моей ниже!
+            git clone https://github.com/${{ github.repository }}.git .
+
+            # 4. Запускаем сборку
             sudo docker-compose up --build -d
