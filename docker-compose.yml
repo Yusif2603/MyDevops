@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  # Наш сайт (Фронтенд)
+  my-website:
+    build: ./website
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt
+    restart: always
+
+  # Наш бот (Бэкенд/Программа)
+  my-bot:
+    build: ./bot
+    restart: always
