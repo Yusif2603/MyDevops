@@ -19,16 +19,22 @@ jobs:
           username: ubuntu
           key: ${{ secrets.SSH_PRIVATE_KEY }}
          script: |
-            # 1. Создаем папку и заходим в нее
-            mkdir -p ~/app
-            cd ~/app
+            # 1. Заходим в домашнюю директорию
+            cd ~
+            
+            # 2. Удаляем старую папку app, чтобы скачать всё заново (чистовик)
+            sudo rm -rf app
+            
+            # 3. Скачиваем твой проект из GitHub на сервер
+            git clone https://github.com/Yusif2603/MyDevops.git app
+            
+            # 4. Переходим в скачанную папку
+            cd app
 
-            # 2. Очищаем старое (чтобы не было путаницы)
-            sudo rm -rf *
+            # 5. Останавливаем старые контейнеры, чтобы не мешались
+            sudo docker-compose down || true
+            sudo docker stop my-web-site || true
+            sudo docker rm my-web-site || true
 
-            # 3. Клонируем свежий код прямо из твоего репозитория
-            # Вставь тут свою ссылку на репозиторий вместо моей ниже!
-            git clone https://github.com/${{ github.repository }}.git .
-
-            # 4. Запускаем сборку
+            # 6. ЗАПУСК! Собираем и поднимаем всё
             sudo docker-compose up --build -d
