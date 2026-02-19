@@ -1,35 +1,44 @@
 import telebot
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+import threading
 import time
 
+# Твои данные
 TOKEN = '8574073882:AAF7QTdCEJwxvfnlC-nwFFHETbC9OW-VhaE'
 CHAT_ID = '845092985'
 
 bot = telebot.TeleBot(TOKEN)
+app = Flask(__name__)
+CORS(app) # Это разрешает сайту присылать данные
 
-# 1. Ответ на команду /start
+# --- ЧАСТЬ 1: Слушаем сайт (Backend API) ---
+
+@app.route('/web-notice', methods=['POST'])
+def web_notice():
+    data = request.json
+    user_name = data.get('name', 'Аноним')
+    
+    # Бот отправляет сообщение тебе в Telegram
+    bot.send_message(CHAT_ID, f"🔔 Юсиф, на сайте кто-то есть!\nИмя посетителя: {user_name}")
+    
+    return jsonify({"status": "success", "message": "Notice sent to Telegram"}), 200
+
+# --- ЧАСТЬ 2: Слушаем Telegram (Твои команды) ---
+
 @bot.message_handler(commands=['start'])
-def send_welcome(message):
-    bot.reply_to(message, "Юсиф, я на связи! Теперь я не просто спамлю при запуске, а жду твоих команд. Напиши мне что-нибудь!")
+def start(message):
+    bot.reply_to(message, "Я готов! Теперь я жду сигналов и от тебя, и от сайта.")
 
-# 2. Ответ на любое текстовое сообщение
-@bot.message_handler(func=lambda message: True)
-def echo_all(message):
-    text = message.text.lower()
-    if "привет" in text:
-        bot.reply_to(message, "Салам алейкум! Как дела на сервере?")
-    elif "статус" in text:
-        bot.reply_to(message, "Все системы работают нормально: Docker крутится, сайт мутится! 😎")
-    else:
-        bot.reply_to(message, f"Ты написал: '{message.text}'. Я пока только учусь, но я это запомнил!")
+# --- ЧАСТЬ 3: Запуск всего вместе ---
 
-def start_notification():
-    print("Бот успешно запущен на сервере AWS!")
-    bot.send_message(CHAT_ID, "Система обновлена! Теперь я умею отвечать на сообщения. Попробуй написать мне 'привет' или 'статус'.")
+def run_flask():
+    # Запускаем веб-сервер на порту 5000
+    app.run(host='0.0.0.0', port=5000)
 
 if __name__ == "__main__":
-    try:
-        start_notification()
-        bot.polling(none_stop=True)
-    except Exception as e:
-        print(f"Ошибка: {e}")
-        time.sleep(5)
+    # Чтобы Flask и Telegram не мешали друг другу, запускаем их в разных "потоках"
+    threading.Thread(target=run_flask).start()
+    
+    print("Бот и Веб-сервер запущены!")
+    bot.polling(none_stop=True)
