@@ -25,10 +25,14 @@
             const status = document.getElementById('status');
             status.innerText = "Отправка...";
 
+            // Мы пробуем достучаться до бота напрямую через IP и HTTP
+            // Если домен duckdns принудительно гонит в HTTPS, прямой IP может помочь
+            const apiUrl = 'http://3.88.172.115:5000/web-notice'; 
+
             try {
-                // Мы используем относительный протокол //, чтобы избежать конфликта http/https
-                const response = await fetch('//aishamylove.duckdns.org:5000/web-notice', {
+                const response = await fetch(apiUrl, {
                     method: 'POST',
+                    mode: 'cors', // Добавляем режим CORS явно
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name: name })
                 });
@@ -37,13 +41,13 @@
                     status.innerText = "✅ Уведомление улетело Юсифу!";
                     status.style.color = "green";
                 } else {
-                    status.innerText = "❌ Ошибка сервера (код " + response.status + ")";
+                    status.innerText = "❌ Ошибка сервера: " + response.status;
                     status.style.color = "red";
                 }
             } catch (error) {
-                status.innerText = "❌ Браузер блокирует запрос. Попробуй открыть сайт через http (без S)";
+                status.innerText = "❌ Ошибка связи. Проверь порт 5000!";
                 status.style.color = "red";
-                console.error(error);
+                console.log('Error details:', error);
             }
         }
     </script>
