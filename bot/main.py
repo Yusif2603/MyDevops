@@ -10,7 +10,7 @@ CHAT_ID = '845092985'
 
 bot = telebot.TeleBot(TOKEN)
 app = Flask(__name__)
-CORS(app) # Это разрешает сайту присылать данные
+CORS(app, resources={r"/*": {"origins": "*"}}) # Разрешить запросы ототовсюду
 
 # --- ЧАСТЬ 1: Слушаем сайт (Backend API) ---
 
