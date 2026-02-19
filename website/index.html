@@ -13,7 +13,7 @@
 <body>
     <div class="container">
         <h1>Привет, Юсиф!</h1>
-        <p>Введи имя, и бот пришлет уведомление в Telegram.</p>
+        <p>Введи имя, и я пришлю тебе уведомление в Telegram.</p>
         <input type="text" id="userName" placeholder="Твое имя"><br>
         <button onclick="sendNotice()">Отправить боту</button>
         <p id="status"></p>
@@ -21,34 +21,35 @@
 
     <script>
         async function sendNotice() {
-            const name = document.getElementById('userName').value || 'Аноним';
+            const nameInput = document.getElementById('userName');
             const status = document.getElementById('status');
-            status.innerText = "Отправка...";
+            const name = nameInput.value || 'Аноним';
 
-            // Мы пробуем достучаться до бота напрямую через IP и HTTP
-            // Если домен duckdns принудительно гонит в HTTPS, прямой IP может помочь
-            const apiUrl = 'http://18.196.178.223:5000/web-notice'; 
+            status.innerText = "Отправка...";
+            status.style.color = "black";
 
             try {
-                const response = await fetch(apiUrl, {
+                // Вот тот самый кусок кода, вставленный правильно внутрь функции
+                const response = await fetch('https://aishamylove.duckdns.org/api/web-notice', {
                     method: 'POST',
-                    mode: 'cors', // Добавляем режим CORS явно
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name: name })
                 });
 
                 if (response.ok) {
-                    status.innerText = "✅ Уведомление улетело Юсифу!";
+                    status.innerText = "✅ Красава! Уведомление в Телеге!";
                     status.style.color = "green";
+                    nameInput.value = ""; // Очистим поле
                 } else {
                     status.innerText = "❌ Ошибка сервера: " + response.status;
                     status.style.color = "red";
                 }
             } catch (error) {
-                status.innerText = "❌ Ошибка связи. Проверь порт 5000!";
+                status.innerText = "❌ Ошибка! Проверь nginx.conf и домен.";
                 status.style.color = "red";
-                console.log('Error details:', error);
+                console.error('Подробности ошибки:', error);
             }
         }
     </script>
+</body>
 </html>
