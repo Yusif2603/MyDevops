@@ -7,7 +7,6 @@ services:
     ports:
       - "80:80"
       - "443:443"
-      - "5000:5000"
     volumes:
       - /etc/letsencrypt:/etc/letsencrypt
     restart: always
@@ -15,4 +14,6 @@ services:
   # Наш бот (Бэкенд/Программа)
   my-bot:
     build: ./bot
+    ports:
+      - "5000:5000"  # ТЕПЕРЬ ОН ТУТ, ГДЕ ЕМУ И МЕСТО
     restart: always
