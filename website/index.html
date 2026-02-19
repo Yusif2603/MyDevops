@@ -2,119 +2,49 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Для Аиши ❤️</title>
+    <title>My DevOps Project</title>
     <style>
-        body {
-            background: #ffafbd;
-            background: linear-gradient(to right, #ffc3a0, #ffafbd);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex; align-items: center; justify-content: center;
-            height: 100vh; margin: 0; overflow: hidden; color: #d63384;
-        }
-        .game-container {
-            background: rgba(255, 255, 255, 0.9); padding: 30px;
-            border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            text-align: center; max-width: 400px; width: 90%; position: relative; z-index: 10;
-        }
-        h1 { margin-bottom: 20px; font-size: 24px; }
-        .btn {
-            background: #ff4d6d; color: white; border: none;
-            padding: 12px 25px; border-radius: 25px; cursor: pointer;
-            font-size: 18px; margin: 10px; transition: transform 0.2s;
-        }
-        .btn:hover { transform: scale(1.1); background: #ff758f; }
-        #no-btn { position: relative; }
-        .hidden { display: none; }
-        .heart {
-            position: absolute; color: #ff4d6d; font-size: 20px;
-            animation: float 3s linear infinite;
-        }
-        @keyframes float {
-            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
-        }
+        body { font-family: sans-serif; text-align: center; background: #f4f4f4; padding-top: 50px; }
+        .container { background: white; padding: 30px; border-radius: 10px; display: inline-block; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        button { padding: 10px 20px; font-size: 16px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        input { padding: 10px; font-size: 16px; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 10px; }
     </style>
 </head>
 <body>
-
-    <div class="game-container" id="game-box">
-        <div id="step1">
-            <h1>Аиша, ты меня любишь? ❤️</h1>
-            <button class="btn" onclick="nextStep(2)">Да!</button>
-            <button class="btn" id="no-btn" onmouseover="moveNo()">Нет</button>
-        </div>
-
-        <div id="step2" class="hidden">
-            <h1>А как сильно? 🌹</h1>
-            <button class="btn" onclick="nextStep(3)">До луны и обратно!</button>
-            <button class="btn" onclick="nextStep(3)">Больше всех на свете!</button>
-        </div>
-
-        <div id="step3" class="hidden">
-            <h1>Правильный ответ! 🏆</h1>
-            <p style="font-size: 20px;">Теперь посмотри на экран...</p>
-            <button class="btn" onclick="surprise()">Нажми сюда</button>
-        </div>
-
-        <div id="final" class="hidden">
-            <h1>Я ТЕБЯ ЛЮБЛЮ! ❤️</h1>
-            <p>Этот сайт был создан специально для тебя.</p>
-            <p style="font-size: 40px;">💍✨</p>
-        </div>
+    <div class="container">
+        <h1>Привет, Юсиф!</h1>
+        <p>Введи имя, и бот пришлет уведомление в Telegram.</p>
+        <input type="text" id="userName" placeholder="Твое имя"><br>
+        <button onclick="sendNotice()">Отправить боту</button>
+        <p id="status"></p>
     </div>
 
     <script>
-        // Функция, которая отправляет тебе весточку в Телеграм
-        function sendTelegramMessage() {
-            // ВНИМАНИЕ: Замени данные ниже на свои!
-            const token = '8574073882:AAF7QTdCEJwxvfnlC-nwFFHETbC9OW-VhaE'; 
-            const chatId = '845092985';
-            const message = 'Юсиф! Аиша только что дошла до конца игры! ❤️';
+        async function sendNotice() {
+            const name = document.getElementById('userName').value || 'Аноним';
+            const status = document.getElementById('status');
+            status.innerText = "Отправка...";
 
-            const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
+            try {
+                // ВАЖНО: Замени IP_СЕРВЕРА на свой реальный IP или домен
+                const response = await fetch('http://aishamylove.duckdns.org:5000/web-notice', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: name })
+                });
 
-            fetch(url)
-            .then(response => console.log('ТГ уведомление отправлено!'))
-            .catch(error => console.error('Ошибка ТГ:', error));
-        }
-
-        function moveNo() {
-            const btn = document.getElementById('no-btn');
-            const x = Math.random() * (window.innerWidth - btn.offsetWidth);
-            const y = Math.random() * (window.innerHeight - btn.offsetHeight);
-            btn.style.position = 'fixed';
-            btn.style.left = x + 'px';
-            btn.style.top = y + 'px';
-        }
-
-        function nextStep(step) {
-            document.getElementById('step1').classList.add('hidden');
-            document.getElementById('step2').classList.add('hidden');
-            document.getElementById('step3').classList.add('hidden');
-            document.getElementById('step' + step).classList.remove('hidden');
-        }
-
-        
-        function surprise() {
-            document.getElementById('step3').classList.add('hidden');
-            document.getElementById('final').classList.remove('hidden');
-            
-        
-            setInterval(createHeart, 300);
-            
-           
-            sendTelegramMessage();
-        }
-
-        function createHeart() {
-            const heart = document.createElement('div');
-            heart.classList.add('heart');
-            heart.innerHTML = '❤️';
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.animationDuration = Math.random() * 2 + 3 + 's';
-            document.body.appendChild(heart);
-            setTimeout(() => heart.remove(), 4000);
+                if (response.ok) {
+                    status.innerText = "✅ Уведомление улетело Юсифу!";
+                    status.style.color = "green";
+                } else {
+                    status.innerText = "❌ Ошибка сервера";
+                    status.style.color = "red";
+                }
+            } catch (error) {
+                status.innerText = "❌ Не удалось связаться с ботом";
+                status.style.color = "red";
+                console.error(error);
+            }
         }
     </script>
 </body>
