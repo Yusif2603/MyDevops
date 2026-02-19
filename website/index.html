@@ -26,8 +26,8 @@
             status.innerText = "Отправка...";
 
             try {
-                // ВАЖНО: Замени IP_СЕРВЕРА на свой реальный IP или домен
-                const response = await fetch('http://aishamylove.duckdns.org:5000/web-notice', {
+                // Мы используем относительный протокол //, чтобы избежать конфликта http/https
+                const response = await fetch('//aishamylove.duckdns.org:5000/web-notice', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name: name })
@@ -37,15 +37,14 @@
                     status.innerText = "✅ Уведомление улетело Юсифу!";
                     status.style.color = "green";
                 } else {
-                    status.innerText = "❌ Ошибка сервера";
+                    status.innerText = "❌ Ошибка сервера (код " + response.status + ")";
                     status.style.color = "red";
                 }
             } catch (error) {
-                status.innerText = "❌ Не удалось связаться с ботом";
+                status.innerText = "❌ Браузер блокирует запрос. Попробуй открыть сайт через http (без S)";
                 status.style.color = "red";
                 console.error(error);
             }
         }
     </script>
-</body>
 </html>
