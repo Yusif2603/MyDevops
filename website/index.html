@@ -67,11 +67,11 @@
             }
         }
 
-        // Вторая функция - для времени (ОТДЕЛЬНО!)
+// Вторая функция - для времени (ОТДЕЛЬНО!)
         async function getServerTime() {
             const timeDisplay = document.getElementById('timeDisplay');
-            timeDisplay.innerText = "⏳ Запрашиваю время...";
-
+            // Убираем текст "Запрашиваю...", чтобы он не мелькал каждую секунду
+            
             try {
                 const response = await fetch('https://aishamylove.duckdns.org/api/time');
                 const data = await response.json();
@@ -82,6 +82,10 @@
                 timeDisplay.innerText = "❌ Не удалось получить время";
                 timeDisplay.style.color = "#f56565";
             }
+
+            // ВОТ ОНА! Эта строка заставит функцию запуститься снова через 1000 мс (1 сек)
+            setTimeout(getServerTime, 1000);
+        }
         }
     </script>
 </body>
