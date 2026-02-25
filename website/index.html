@@ -36,25 +36,9 @@
         <div id="status"></div>
     </div>
 
-    <script>
+   <script>
+        // Первая функция - для отправки имени
         async function sendNotice() {
-            async function getServerTime() {
-            const timeDisplay = document.getElementById('timeDisplay');
-            timeDisplay.innerText = "⏳ Запрашиваю время...";
-
-            try {
-                // Мы идем по тому же пути, что и бот, но на новый адрес /api/time
-                const response = await fetch('https://aishamylove.duckdns.org/api/time');
-                const data = await response.json();
-                
-                // Кладем полученное время в нашу "коробку" на экране
-                timeDisplay.innerText = "🕒 Время на сервере: " + data.time;
-                timeDisplay.style.color = "#2d3748";
-            } catch (error) {
-                timeDisplay.innerText = "❌ Не удалось получить время";
-                timeDisplay.style.color = "#f56565";
-            }
-        }
             const nameInput = document.getElementById('userName');
             const status = document.getElementById('status');
             const name = nameInput.value.trim() || 'Аноним';
@@ -80,6 +64,23 @@
             } catch (error) {
                 status.innerText = "❌ Ошибка сети";
                 status.style.color = "#f56565";
+            }
+        }
+
+        // Вторая функция - для времени (ОТДЕЛЬНО!)
+        async function getServerTime() {
+            const timeDisplay = document.getElementById('timeDisplay');
+            timeDisplay.innerText = "⏳ Запрашиваю время...";
+
+            try {
+                const response = await fetch('https://aishamylove.duckdns.org/api/time');
+                const data = await response.json();
+                
+                timeDisplay.innerText = "🕒 Время на сервере: " + data.time;
+                timeDisplay.style.color = "#2d3748";
+            } catch (error) {
+                timeDisplay.innerText = "❌ Не удалось получить время";
+                timeDisplay.style.color = "#f56565";
             }
         }
     </script>
