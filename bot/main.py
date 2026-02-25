@@ -39,6 +39,13 @@ def run_flask():
 if __name__ == "__main__":
     # Чтобы Flask и Telegram не мешали друг другу, запускаем их в разных "потоках"
     threading.Thread(target=run_flask).start()
-    
+import datetime  # Добавь это в самый верх файла, если нет
+
+@app.route('/api/time', methods=['GET'])
+def get_time():
+    # Берем текущее время сервера
+    now = datetime.datetime.now().strftime("%H:%M:%S")
+    return {"time": now}
+
     print("Бот и Веб-сервер запущены!")
     bot.polling(none_stop=True)
