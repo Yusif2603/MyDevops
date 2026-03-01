@@ -1,8 +1,15 @@
-FROM nginx:alpine
+FROM python:3.9-slim
 
-RUN rm /etc/nginx/conf.d/default.conf
+WORKDIR /app
 
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Устанавливаем системные пакеты для работы с PostgreSQL
+RUN apt-get update && apt-get install -y libpq-dev gcc && rm -rf /var/lib/apt/lists/*
 
+# Копируем список библиотек и устанавливаем их
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-COPY index.html /usr/share/nginx/html/index.html
+# Копируем код бота
+COPY . .
+
+CMD ["python", "main.py"]
