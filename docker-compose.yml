@@ -11,9 +11,30 @@ services:
       - /etc/letsencrypt:/etc/letsencrypt
     restart: always
 
-  # Наш бот (Бэкенд/Программа)
+  # Наш бот (Бэкенд)
   my-bot:
     build: ./bot
-    ports:
-      - "5000:5000"  # ТЕПЕРЬ ОН ТУТ, ГДЕ ЕМУ И МЕСТО
+    # Мы убираем порты 5000:5000 наружу, так как Nginx общается с ботом внутри сети Docker
+    # Но добавляем зависимость: бот не включится, пока база не будет готова
+    depends_on:
+      - db
+    environment:
+      # Это "адресная строка" для бота, чтобы он нашел базу данных
+      - DATABASE_URL=postgresql://yusif_user:yusif_password@db:5432/yusif_db
     restart: always
+
+  # --- НОВАЯ ЧАСТЬ: БАЗА ДАННЫХ ---
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: yusif_user
+      POSTGRES_PASSWORD: yusif_password
+      POSTGRES_DB: yusif_db
+    volumes:
+      # Это сохранит данные, даже если ты удалишь контейнер
+      - postgres_data:/var/lib/postgresql/data
+
+# Это "чердак", где хранятся данные базы на диске AWS
+volumes:
+  postgres_data:
