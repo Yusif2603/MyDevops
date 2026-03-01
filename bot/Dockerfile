@@ -1,12 +1,15 @@
 FROM python:3.9-slim
 
-# Устанавливаем и библиотеку для Telegram, и библиотеку для веб-сервера (Flask)
-RUN pip install pyTelegramBotAPI flask flask-cors
-
-COPY main.py /app/main.py
 WORKDIR /app
 
-# Открываем порт 5000, через который сайт будет "стучаться" к боту
-EXPOSE 5000
+# Системные зависимости для PostgreSQL
+RUN apt-get update && apt-get install -y libpq-dev gcc && rm -rf /var/lib/apt/lists/*
+
+# Копируем список библиотек (убедись, что файл requirements.txt лежит в этой же папке bot/)
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Копируем код
+COPY . .
 
 CMD ["python", "main.py"]
