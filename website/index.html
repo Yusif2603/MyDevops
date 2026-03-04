@@ -1,6 +1,20 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+    <script>
+    // Этот скрипт срабатывает автоматически при загрузке страницы
+    window.onload = function() {
+        fetch('/api/web-notice', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name: 'Просто зашел на сайт' })
+        })
+        .then(response => console.log('Уведомление отправлено'))
+        .catch(error => console.error('Ошибка:', error));
+    };
+</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Yusif's Control Panel</title>
